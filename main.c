@@ -8,41 +8,41 @@ typedef struct {
 	char *arr;
 }stack;
 
-int isEmpty(stack s)
+int isEmpty(stack *s)
 {
-    if (s.top == -1)
+    if (s->top == -1)
         return 1;
     else
         return 0;
 }
 
-void push(stack s, char value)
+void push(stack *s, char value)
 {
-    if (s.top == s.size-1)
+    if (s->top == s->size-1)
     {
-        int newSize = s.size + 5;
-        char *newArr = (char *)realloc(s.arr, sizeof(char) * newSize);
+        int newSize = s->size + 5;
+        char *newArr = (char *)realloc(s->arr, sizeof(char) * newSize);
         if(newArr == NULL){
 			printf("Memory can't be allocated\n");
 			exit(EXIT_FAILURE);
 		}
-        s.arr = newArr;
-        s.size = newSize;
+        s->arr = newArr;
+        s->size = newSize;
     }
 
-    s.top++;
-	s.arr[s.top] = value;
+    s->top++;
+	s->arr[s->top] = value;
 }
 
-int pop(stack s)
+int pop(stack *s)
 {
     if( isEmpty(s) == 1)
     {
         printf("Stack is empty\n");
         return -1;
     }
-	int temp = s.top;
-    s.top--;
+	int temp = s->top;
+    s->top--;
 	return temp;
 }
 
@@ -60,14 +60,21 @@ int precedence(char exp){
 	else if(exp == '^')
 		return 3;
 	else
-		return -1;
+		return 0;
 }
 
 char * intoPostfix(char *exp){
-	stack sp;
-	sp.size = 0;
+	stack *sp = (stack *)malloc(sizeof(stack));
+	sp->size = 5;
+	sp->top = -1;
+	sp->arr = (char *)malloc(sp->size * sizeof(char));
 	char *postfix = (char *)malloc((strlen(exp) + 1)*sizeof(char));
 	int i = 0, j = 0;
+
+	if(sp->arr == NULL || postfix == NULL){
+		printf("Memory can't allocated\n");
+		exit(EXIT_FAILURE);
+	}
 
 	while(exp[i] != '\0'){
 		if(!isOperator(exp[i])){
@@ -76,7 +83,7 @@ char * intoPostfix(char *exp){
 			j++;
 		}
 		else{
-			if(precedence(exp[i] > precedence(sp.top))){
+			if(precedence(exp[i] > precedence(sp->top))){
 				push(sp,exp[i]);
 				i++;
 			}
@@ -90,6 +97,8 @@ char * intoPostfix(char *exp){
 		postfix[j] = pop(sp);
 		j++;
 	}
+	postfix[j] = '\0';
+	free(sp->arr);
 	return postfix;
 }
 
