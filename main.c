@@ -6,6 +6,17 @@ typedef struct {
 	char *arr;
 }stack;
 
+int precedence(char exp){
+	if (exp == '+' || exp == '-')
+		return 1;
+	else if(exp == '*' || exp == '/')
+		return 2;
+	else if(exp == '^')
+		return 3;
+	else
+		return -1;
+}
+
 char * intoPostfix(char *exp){
 	stack sp;
 	char *postfix = (char *)malloc(strlen(exp)*sizeof(char));
