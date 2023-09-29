@@ -27,6 +27,10 @@ char * intoPostfix(char *exp){
 			}
 		}
 	}
+	while(!isEmpty(sp)){
+		postfix[j] = pop(sp);
+		j++;
+	}
 	return postfix;
 }
 
