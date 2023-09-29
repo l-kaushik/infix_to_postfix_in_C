@@ -3,7 +3,7 @@
 #include<string.h>
 
 typedef struct {
-	char top;
+	int top;
 	int size;
 	char *arr;
 }stack;
@@ -34,14 +34,14 @@ void push(stack *s, char value)
 	s->arr[s->top] = value;
 }
 
-int pop(stack *s)
+char pop(stack *s)
 {
     if( isEmpty(s) == 1)
     {
         printf("Stack is empty\n");
         return -1;
     }
-	int temp = s->top;
+	char temp = s->arr[s->top];
     s->top--;
 	return temp;
 }
@@ -63,9 +63,15 @@ int precedence(char exp){
 		return 0;
 }
 
+char stackTop(stack *s){
+	if(s->top == -1)
+		return '0';
+	else
+		return s->arr[s->top];
+}
 char * intoPostfix(char *exp){
 	stack *sp = (stack *)malloc(sizeof(stack));
-	sp->size = 5;
+	sp->size = 10;
 	sp->top = -1;
 	sp->arr = (char *)malloc(sp->size * sizeof(char));
 	char *postfix = (char *)malloc((strlen(exp) + 1)*sizeof(char));
@@ -83,7 +89,7 @@ char * intoPostfix(char *exp){
 			j++;
 		}
 		else{
-			if(precedence(exp[i] > precedence(sp->top))){
+			if(precedence(exp[i]) > precedence(stackTop(sp))){
 				push(sp,exp[i]);
 				i++;
 			}
