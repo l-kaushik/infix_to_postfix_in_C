@@ -1,5 +1,6 @@
 #include<stdio.h> 
 #include<stdlib.h>
+#include<string.h>
 
 typedef struct {
 	char top;
@@ -45,6 +46,12 @@ int pop(stack s)
 	return temp;
 }
 
+int isOperator(char exp){
+	if(exp == '+' || exp == '-' || exp == '*' || exp == '/' || exp == '^')
+		return 1;
+	return 0;
+}
+
 int precedence(char exp){
 	if (exp == '+' || exp == '-')
 		return 1;
@@ -56,11 +63,10 @@ int precedence(char exp){
 		return -1;
 }
 
-
 char * intoPostfix(char *exp){
 	stack sp;
 	sp.size = 0;
-	char *postfix = (char *)malloc(strlen(exp)*sizeof(char));
+	char *postfix = (char *)malloc((strlen(exp) + 1)*sizeof(char));
 	int i = 0, j = 0;
 
 	while(exp[i] != '\0'){
@@ -72,6 +78,7 @@ char * intoPostfix(char *exp){
 		else{
 			if(precedence(exp[i] > precedence(sp.top))){
 				push(sp,exp[i]);
+				i++;
 			}
 			else{
 				postfix[j] = pop(sp);
@@ -88,7 +95,7 @@ char * intoPostfix(char *exp){
 
 int main()
 {
-	char exp[] = {"a-b*d+c"};
+	char exp[] = {"a-b*d+c\0"};
 
 	printf("%s",intoPostfix(exp));
     return 0;
