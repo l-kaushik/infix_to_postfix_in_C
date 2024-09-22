@@ -110,7 +110,7 @@ char * intoPostfix(char *exp){
 
 int main()
 {
-	char exp[] = {"a-b*d+c\0"};
+	char exp[] = {"A+B*C/(E-F)"};
 
 	printf("%s",intoPostfix(exp));
     return 0;
